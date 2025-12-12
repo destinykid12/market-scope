@@ -23,7 +23,13 @@ export function useAuth() {
   }, []);
 
   const signUp = useCallback(
-    async (email: string, phone: string, fullName: string, role: "customer" | "business", password: string) => {
+    async (
+      email: string,
+      phone: string,
+      fullName: string,
+      role: "customer" | "business",
+      password: string,
+    ) => {
       try {
         setError(null);
         setIsLoading(true);
@@ -53,39 +59,37 @@ export function useAuth() {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
-  const signIn = useCallback(
-    async (phone: string, password: string) => {
-      try {
-        setError(null);
-        setIsLoading(true);
-        const { user: signedInUser, error: signInError } = await authService.signIn({
+  const signIn = useCallback(async (phone: string, password: string) => {
+    try {
+      setError(null);
+      setIsLoading(true);
+      const { user: signedInUser, error: signInError } =
+        await authService.signIn({
           phone,
           password,
         });
 
-        if (signInError) {
-          setError(signInError);
-          return { user: null, error: signInError };
-        }
-
-        if (signedInUser) {
-          setUser(signedInUser);
-        }
-
-        return { user: signedInUser, error: null };
-      } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "Sign in failed";
-        setError(errorMsg);
-        return { user: null, error: errorMsg };
-      } finally {
-        setIsLoading(false);
+      if (signInError) {
+        setError(signInError);
+        return { user: null, error: signInError };
       }
-    },
-    []
-  );
+
+      if (signedInUser) {
+        setUser(signedInUser);
+      }
+
+      return { user: signedInUser, error: null };
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Sign in failed";
+      setError(errorMsg);
+      return { user: null, error: errorMsg };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const sendOTP = useCallback(async (phone: string) => {
     try {
@@ -99,18 +103,28 @@ export function useAuth() {
 
       return { success: true, error: null };
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Failed to send OTP";
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to send OTP";
       setError(errorMsg);
       return { success: false, error: errorMsg };
     }
   }, []);
 
   const verifyOTP = useCallback(
-    async (phone: string, token: string, userData?: { full_name: string; role: "customer" | "business"; email: string }) => {
+    async (
+      phone: string,
+      token: string,
+      userData?: {
+        full_name: string;
+        role: "customer" | "business";
+        email: string;
+      },
+    ) => {
       try {
         setError(null);
         setIsLoading(true);
-        const { user: verifiedUser, error: verifyError } = await authService.verifyOTP(phone, token, userData);
+        const { user: verifiedUser, error: verifyError } =
+          await authService.verifyOTP(phone, token, userData);
 
         if (verifyError) {
           setError(verifyError);
@@ -123,14 +137,15 @@ export function useAuth() {
 
         return { user: verifiedUser, error: null };
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "OTP verification failed";
+        const errorMsg =
+          err instanceof Error ? err.message : "OTP verification failed";
         setError(errorMsg);
         return { user: null, error: errorMsg };
       } finally {
         setIsLoading(false);
       }
     },
-    []
+    [],
   );
 
   const signOut = useCallback(async () => {
@@ -161,7 +176,8 @@ export function useAuth() {
 
       try {
         setError(null);
-        const { user: updatedUser, error: updateError } = await authService.updateProfile(user.id, updates);
+        const { user: updatedUser, error: updateError } =
+          await authService.updateProfile(user.id, updates);
 
         if (updateError) {
           setError(updateError);
@@ -174,12 +190,13 @@ export function useAuth() {
 
         return { user: updatedUser, error: null };
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : "Profile update failed";
+        const errorMsg =
+          err instanceof Error ? err.message : "Profile update failed";
         setError(errorMsg);
         return { user: null, error: errorMsg };
       }
     },
-    [user]
+    [user],
   );
 
   return {

@@ -59,7 +59,7 @@ class AuthService {
       full_name: string;
       role: UserRole;
       email: string;
-    }
+    },
   ): Promise<{ user?: AuthUser; error?: string }> {
     try {
       // Verify the OTP token with Supabase Auth
@@ -151,12 +151,10 @@ class AuthService {
   async signUp(data: SignUpData): Promise<{ user?: AuthUser; error?: string }> {
     try {
       // Create auth user
-      const { data: authData, error: authError } = await supabase.auth.signUp(
-        {
-          email: data.email,
-          password: data.password,
-        }
-      );
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
 
       if (authError) {
         return { error: authError.message };
@@ -316,7 +314,7 @@ class AuthService {
    */
   async updateProfile(
     userId: string,
-    updates: Partial<AuthUser>
+    updates: Partial<AuthUser>,
   ): Promise<{ user?: AuthUser; error?: string }> {
     try {
       const { data: user, error } = await supabase

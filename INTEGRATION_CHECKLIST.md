@@ -1,6 +1,7 @@
 # Supabase Integration Checklist
 
 ## ✅ Backend Setup Complete
+
 - [x] Supabase database schema created (`database.sql`)
 - [x] Environment variables configured (`.env`)
 - [x] Supabase client initialized (`shared/supabase.ts`)
@@ -17,8 +18,10 @@
 ## 🚀 Next Steps: Migrate Pages to Supabase
 
 ### 1. Run Database Migrations
+
 **Status**: Not started
 **Steps**:
+
 1. Go to your Supabase dashboard
 2. Navigate to SQL Editor
 3. Copy content from `database.sql`
@@ -26,27 +29,33 @@
 5. Verify tables are created
 
 ### 2. Update Authentication Pages
+
 **Status**: Partially complete
 
 #### SignUp.tsx
+
 - [x] Updated to use `authService.signUp()`
 - [ ] Test registration flow
 - [ ] Verify user is created in database
 
 #### SignIn.tsx
+
 - [ ] Update to use `authService.signIn()`
 - [ ] Add password reset functionality
 - [ ] Test login flow
 
 #### VerifyOTP.tsx
+
 - [ ] Update to use `authService.verifyOTP()`
 - [ ] Handle OTP verification
 - [ ] Redirect to dashboard on success
 
 ### 3. Update Business Pages
+
 **Status**: Not started
 
 #### BusinessDashboard.tsx
+
 - [ ] Replace localStorage with `businessService`
 - [ ] Implement `getBusinessByUserId()` to load user's business
 - [ ] Implement `createBusiness()` for new business creation
@@ -56,9 +65,10 @@
 - [ ] Add loading and error states
 
 **Example**:
+
 ```typescript
-import { businessService } from '@shared/services';
-import { useAuth } from '@/hooks/use-auth';
+import { businessService } from "@shared/services";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
@@ -93,6 +103,7 @@ export default function BusinessDashboard() {
 ```
 
 #### Profile.tsx
+
 - [ ] Replace localStorage with `userService`
 - [ ] Load user profile with `getUserById()`
 - [ ] Update profile with `updateUser()`
@@ -100,15 +111,18 @@ export default function BusinessDashboard() {
 - [ ] Add product management using `productService`
 
 #### ExploreBusiness.tsx
+
 - [x] Updated to use `businessService.getBusinesses()`
 - [x] Added category and location filtering
 - [ ] Test filtering and search
 - [ ] Verify all businesses load correctly
 
 ### 4. Update Business Detail Page
+
 **Status**: Not started
 
 #### BusinessDetail.tsx
+
 - [ ] Create this page to show single business
 - [ ] Fetch business with `businessService.getBusinessById(id)`
 - [ ] Fetch reviews with `reviewService.getBusinessReviews(id)`
@@ -117,9 +131,14 @@ export default function BusinessDashboard() {
 - [ ] Handle follow/unfollow with `businessService.followBusiness()`
 
 **Example**:
+
 ```typescript
-import { useParams } from 'react-router-dom';
-import { businessService, reviewService, productService } from '@shared/services';
+import { useParams } from "react-router-dom";
+import {
+  businessService,
+  reviewService,
+  productService,
+} from "@shared/services";
 
 export default function BusinessDetail() {
   const { id } = useParams();
@@ -132,7 +151,7 @@ export default function BusinessDetail() {
       const [biz, revs, prods] = await Promise.all([
         businessService.getBusinessById(id),
         reviewService.getBusinessReviews(id),
-        productService.getBusinessProducts(id)
+        productService.getBusinessProducts(id),
       ]);
       setBusiness(biz.data);
       setReviews(revs.data);
@@ -146,9 +165,11 @@ export default function BusinessDetail() {
 ```
 
 ### 5. Update Messages Page
+
 **Status**: Not started
 
 #### Messages.tsx
+
 - [ ] Replace localStorage with `messageService`
 - [ ] Fetch conversations with `getUserConversations()`
 - [ ] Load messages with `getConversationMessages()`
@@ -157,9 +178,10 @@ export default function BusinessDetail() {
 - [ ] Real-time updates (optional): Use Supabase subscriptions
 
 **Example**:
+
 ```typescript
-import { messageService } from '@shared/services';
-import { useAuth } from '@/hooks/use-auth';
+import { messageService } from "@shared/services";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Messages() {
   const { user } = useAuth();
@@ -186,17 +208,21 @@ export default function Messages() {
 ```
 
 ### 6. Update Home/Dashboard Pages
+
 **Status**: Not started
 
 #### Home.tsx / Index.tsx
+
 - [ ] Show user's business dashboard if logged in
 - [ ] Show recommended businesses
 - [ ] Show user's followed businesses
 
 ### 7. Update Search Page
+
 **Status**: Not started
 
 #### Search.tsx
+
 - [ ] Use `businessService.getBusinesses()` with search filters
 - [ ] Real-time search as user types
 - [ ] Show category and location filters
@@ -204,41 +230,51 @@ export default function Messages() {
 ## 🔧 Utility Functions to Create
 
 ### Image Upload Handler
-Create `client/lib/upload.ts`:
-```typescript
-import { supabase } from '@shared/services';
 
-export async function uploadImage(file: File, bucket: string = 'business-images') {
-  const fileExt = file.name.split('.').pop();
+Create `client/lib/upload.ts`:
+
+```typescript
+import { supabase } from "@shared/services";
+
+export async function uploadImage(
+  file: File,
+  bucket: string = "business-images",
+) {
+  const fileExt = file.name.split(".").pop();
   const fileName = `${Math.random()}.${fileExt}`;
-  
+
   const { data, error } = await supabase.storage
     .from(bucket)
     .upload(fileName, file);
-  
+
   if (error) throw error;
-  
+
   return supabase.storage.from(bucket).getPublicUrl(fileName).data.publicUrl;
 }
 ```
 
 ### Real-time Messaging Subscription
-Create `client/lib/subscriptions.ts`:
-```typescript
-import { supabase } from '@shared/services';
 
-export function subscribeToMessages(userId: string, callback: (message: any) => void) {
+Create `client/lib/subscriptions.ts`:
+
+```typescript
+import { supabase } from "@shared/services";
+
+export function subscribeToMessages(
+  userId: string,
+  callback: (message: any) => void,
+) {
   return supabase
     .channel(`messages:${userId}`)
     .on(
-      'postgres_changes',
+      "postgres_changes",
       {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `recipient_id=eq.${userId}`
+        event: "INSERT",
+        schema: "public",
+        table: "messages",
+        filter: `recipient_id=eq.${userId}`,
       },
-      callback
+      callback,
     )
     .subscribe();
 }
@@ -247,6 +283,7 @@ export function subscribeToMessages(userId: string, callback: (message: any) => 
 ## 📝 Testing Checklist
 
 ### Authentication
+
 - [ ] Sign up with email/password
 - [ ] Sign up with OTP
 - [ ] Sign in with email/password
@@ -257,6 +294,7 @@ export function subscribeToMessages(userId: string, callback: (message: any) => 
 - [ ] Password reset works
 
 ### Businesses
+
 - [ ] User can create a business listing
 - [ ] Listings show in explore page
 - [ ] Filtering by category works
@@ -267,6 +305,7 @@ export function subscribeToMessages(userId: string, callback: (message: any) => 
 - [ ] Business rating updates after review
 
 ### Reviews
+
 - [ ] Can leave review on business
 - [ ] Review appears immediately
 - [ ] Average rating updates
@@ -275,6 +314,7 @@ export function subscribeToMessages(userId: string, callback: (message: any) => 
 - [ ] Cannot review same business twice
 
 ### Messages
+
 - [ ] Can send message to business
 - [ ] Conversation appears in list
 - [ ] Messages load in conversation
@@ -283,6 +323,7 @@ export function subscribeToMessages(userId: string, callback: (message: any) => 
 - [ ] Delete message works
 
 ### Products
+
 - [ ] Business owner can add products
 - [ ] Products appear on business page
 - [ ] Can edit product details

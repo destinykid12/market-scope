@@ -52,7 +52,7 @@ class MessageService {
         .from("messages")
         .select("*")
         .or(
-          `and(sender_id.eq.${userId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${userId})`
+          `and(sender_id.eq.${userId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${userId})`,
         )
         .order("created_at", { ascending: true });
 
@@ -88,7 +88,8 @@ class MessageService {
     } catch (err) {
       return {
         data: [],
-        error: err instanceof Error ? err.message : "Failed to fetch conversations",
+        error:
+          err instanceof Error ? err.message : "Failed to fetch conversations",
       };
     }
   }
@@ -126,7 +127,8 @@ class MessageService {
     } catch (err) {
       return {
         data: null,
-        error: err instanceof Error ? err.message : "Failed to get conversation",
+        error:
+          err instanceof Error ? err.message : "Failed to get conversation",
       };
     }
   }
@@ -137,7 +139,7 @@ class MessageService {
   private async updateConversation(
     userId: string,
     otherUserId: string,
-    messageId: string
+    messageId: string,
   ) {
     try {
       // Find the business associated with other user
@@ -223,7 +225,8 @@ class MessageService {
     } catch (err) {
       return {
         count: 0,
-        error: err instanceof Error ? err.message : "Failed to get unread count",
+        error:
+          err instanceof Error ? err.message : "Failed to get unread count",
       };
     }
   }

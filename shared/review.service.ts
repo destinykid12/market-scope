@@ -213,7 +213,7 @@ class ReviewService {
    */
   async hasUserReviewedBusiness(
     userId: string,
-    businessId: string
+    businessId: string,
   ): Promise<{ hasReviewed: boolean; error?: string }> {
     try {
       const { data, error } = await supabase
@@ -227,7 +227,8 @@ class ReviewService {
     } catch (err) {
       return {
         hasReviewed: false,
-        error: err instanceof Error ? err.message : "Failed to check review status",
+        error:
+          err instanceof Error ? err.message : "Failed to check review status",
       };
     }
   }

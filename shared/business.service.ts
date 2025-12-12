@@ -34,7 +34,7 @@ class BusinessService {
       if (filters?.searchQuery) {
         const search = filters.searchQuery.toLowerCase();
         query = query.or(
-          `name.ilike.%${search}%,description.ilike.%${search}%,category.ilike.%${search}%`
+          `name.ilike.%${search}%,description.ilike.%${search}%,category.ilike.%${search}%`,
         );
       }
 
@@ -43,7 +43,10 @@ class BusinessService {
       }
 
       if (filters?.offset) {
-        query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1);
+        query = query.range(
+          filters.offset,
+          filters.offset + (filters.limit || 10) - 1,
+        );
       } else {
         query = query.order("created_at", { ascending: false });
       }
@@ -58,7 +61,8 @@ class BusinessService {
     } catch (err) {
       return {
         data: [],
-        error: err instanceof Error ? err.message : "Failed to fetch businesses",
+        error:
+          err instanceof Error ? err.message : "Failed to fetch businesses",
       };
     }
   }
@@ -114,7 +118,10 @@ class BusinessService {
   /**
    * Create new business
    */
-  async createBusiness(userId: string, business: Omit<BusinessInsert, "user_id">) {
+  async createBusiness(
+    userId: string,
+    business: Omit<BusinessInsert, "user_id">,
+  ) {
     try {
       const { data, error } = await supabase
         .from("businesses")
@@ -165,7 +172,7 @@ class BusinessService {
    */
   async updateBusinessStats(
     id: string,
-    stats: { views?: number; inquiries?: number; followers?: number }
+    stats: { views?: number; inquiries?: number; followers?: number },
   ) {
     try {
       const { data, error } = await supabase
@@ -225,7 +232,8 @@ class BusinessService {
     } catch (err) {
       return {
         data: [],
-        error: err instanceof Error ? err.message : "Failed to fetch categories",
+        error:
+          err instanceof Error ? err.message : "Failed to fetch categories",
       };
     }
   }
@@ -245,7 +253,7 @@ class BusinessService {
       }
 
       const locations = Array.from(
-        new Set((data || []).map((b) => b.location).filter(Boolean))
+        new Set((data || []).map((b) => b.location).filter(Boolean)),
       );
 
       return { data: locations, error: null };
@@ -274,7 +282,8 @@ class BusinessService {
 
       // Increment followers count
       await this.updateBusinessStats(businessId, {
-        followers: (await this.getBusinessById(businessId)).data?.followers || 0 + 1,
+        followers:
+          (await this.getBusinessById(businessId)).data?.followers || 0 + 1,
       });
 
       return { data, error: null };
@@ -312,7 +321,8 @@ class BusinessService {
       return { error: null };
     } catch (err) {
       return {
-        error: err instanceof Error ? err.message : "Failed to unfollow business",
+        error:
+          err instanceof Error ? err.message : "Failed to unfollow business",
       };
     }
   }
@@ -333,7 +343,10 @@ class BusinessService {
     } catch (err) {
       return {
         isFollowing: false,
-        error: err instanceof Error ? err.message : "Failed to check following status",
+        error:
+          err instanceof Error
+            ? err.message
+            : "Failed to check following status",
       };
     }
   }

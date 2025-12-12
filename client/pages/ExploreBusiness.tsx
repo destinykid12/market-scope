@@ -40,9 +40,7 @@ export default function ExploreBusiness() {
       const matchesSearch =
         !searchQuery ||
         business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        business.category
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
+        business.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (business.description || "")
           .toLowerCase()
           .includes(searchQuery.toLowerCase());
@@ -63,23 +61,35 @@ export default function ExploreBusiness() {
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={() => navigate("/")}
+            >
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-700 text-white font-bold text-lg">
                 M
               </div>
               <h1 className="text-xl font-bold text-green-900">MarketScope</h1>
             </div>
             <nav className="hidden md:flex items-center gap-8">
-              <a href="/" className="text-gray-700 font-medium hover:text-green-700 transition-colors">
+              <a
+                href="/"
+                className="text-gray-700 font-medium hover:text-green-700 transition-colors"
+              >
                 Home
               </a>
               <a href="/explore" className="text-green-700 font-medium">
                 Explore
               </a>
-              <a href="/about" className="text-gray-700 font-medium hover:text-green-700 transition-colors">
+              <a
+                href="/about"
+                className="text-gray-700 font-medium hover:text-green-700 transition-colors"
+              >
                 About
               </a>
-              <a href="/contact" className="text-gray-700 font-medium hover:text-green-700 transition-colors">
+              <a
+                href="/contact"
+                className="text-gray-700 font-medium hover:text-green-700 transition-colors"
+              >
                 Contact
               </a>
             </nav>
@@ -99,9 +109,14 @@ export default function ExploreBusiness() {
           <h1 className="text-4xl font-bold text-green-900 mb-2">
             Explore Businesses
           </h1>
-          <p className="text-gray-600 mb-6">Discover authentic Nigerian businesses and entrepreneurs</p>
+          <p className="text-gray-600 mb-6">
+            Discover authentic Nigerian businesses and entrepreneurs
+          </p>
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-600" size={20} />
+            <Search
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-green-600"
+              size={20}
+            />
             <input
               type="text"
               placeholder="Search for businesses, products or services..."
@@ -118,7 +133,9 @@ export default function ExploreBusiness() {
             <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 flex-wrap">
               {/* Categories */}
               <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-sm font-semibold text-gray-700">Categories:</span>
+                <span className="text-sm font-semibold text-gray-700">
+                  Categories:
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((category) => (
                     <button
@@ -138,7 +155,9 @@ export default function ExploreBusiness() {
 
               {/* Locations */}
               <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-sm font-semibold text-gray-700">Location:</span>
+                <span className="text-sm font-semibold text-gray-700">
+                  Location:
+                </span>
                 <div className="flex flex-wrap gap-2">
                   {locations.map((location) => (
                     <button
@@ -181,7 +200,10 @@ export default function ExploreBusiness() {
                 {/* Business Image */}
                 <div className="w-full h-48 overflow-hidden bg-gray-100">
                   <img
-                    src={business.image_url || "https://via.placeholder.com/300x200"}
+                    src={
+                      business.image_url ||
+                      "https://via.placeholder.com/300x200"
+                    }
                     alt={business.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -192,7 +214,9 @@ export default function ExploreBusiness() {
                   <h3 className="text-lg font-bold text-green-900 mb-1">
                     {business.name}
                   </h3>
-                  <p className="text-sm text-green-700 font-medium mb-3">{business.category}</p>
+                  <p className="text-sm text-green-700 font-medium mb-3">
+                    {business.category}
+                  </p>
 
                   {/* Description */}
                   <p className="text-sm text-gray-700 mb-4 line-clamp-2">

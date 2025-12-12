@@ -11,6 +11,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { authService } from "@shared/services";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -94,13 +95,30 @@ export default function SignUp() {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { user, error } = await authService.signUp({
+        email: formData.email,
+        phone: formData.phone,
+        full_name: formData.fullName,
+        role: "business",
+        password: formData.password,
+      });
 
-      localStorage.setItem("marketscope_user", JSON.stringify(formData));
-      navigate("/home");
+      if (error) {
+        setErrors({ submit: error });
+        return;
+      }
+
+      if (user) {
+        localStorage.setItem("marketscope_user_id", user.id);
+        localStorage.setItem("marketscope_user_role", user.role);
+        navigate("/choose-role");
+      }
     } catch (err) {
       setErrors({
-        submit: "Failed to create account. Please try again.",
+        submit:
+          err instanceof Error
+            ? err.message
+            : "Failed to create account. Please try again.",
       });
     } finally {
       setIsLoading(false);
